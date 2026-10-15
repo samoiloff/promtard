@@ -5,14 +5,14 @@ import { FormEvent, useEffect, useMemo, useRef } from "react";
 import { ChatMessageList } from "@/components/chat/chat-message-list";
 import { ModelSelect } from "@/components/chat/model-select";
 import { HighlightedPromptTextarea } from "@/components/home/highlighted-prompt-textarea";
-import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TemplateLaunchRail } from "@/components/home/template-launch-rail";
 import { useChat } from "@/contexts/chat-context";
 import { usePromptComposer } from "@/contexts/prompt-composer-context";
 import { useTemplateActions } from "@/hooks/use-template-actions";
+import { resolvedComposerPrompt } from "@/lib/templates/composer-prompt";
 import {
   parameterNamesFromBody,
   promptDisplaySegments,
-  substituteParameters,
 } from "@/lib/templates/parameters";
 
 export function ChatPanel() {
@@ -56,12 +56,13 @@ export function ChatPanel() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const trimmed = draft.trim();
-    if (!trimmed || isStreaming) return;
-    const content =
-      templateBody !== null
-        ? trimmed
-        : substituteParameters(trimmed, parameterValues);
+    if (isStreaming) return;
+    const content = resolvedComposerPrompt(
+      draft,
+      templateBody,
+      parameterValues,
+    );
+    if (!content) return;
     setDraft("");
     clearActiveTemplate();
     clearError();
@@ -163,14 +164,12 @@ export function ChatPanel() {
           </form>
 
           {activeTemplateId ? (
-            <button
-              type="button"
-              onClick={handleEditTemplate}
-              className="flex shrink-0 flex-col items-center justify-center gap-1 rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:bg-zinc-900"
-            >
-              <PencilIcon />
-              <span>редактировать</span>
-            </button>
+            <TemplateLaunchRail
+              draft={draft}
+              templateBody={templateBody}
+              parameterValues={parameterValues}
+              onEdit={handleEditTemplate}
+            />
           ) : null}
         </div>
       </div>

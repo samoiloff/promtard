@@ -38,5 +38,10 @@ export function useTemplateActions() {
     router.push("/templates/new");
   }
 
-  return { openInChat, openEditor };
+  function openNewTemplate() {
+    sessionStorage.removeItem(TEMPLATE_DRAFT_BODY_KEY);
+    router.push("/templates/new");
+  }
+
+  return { openInChat, openEditor, openNewTemplate };
 }

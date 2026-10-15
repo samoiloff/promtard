@@ -25,6 +25,7 @@ type TemplateListPanelProps = {
   loading: boolean;
   error: string | null;
   showAuthor?: boolean;
+  showCreateButton?: boolean;
 };
 
 export function TemplateListPanel({
@@ -34,12 +35,24 @@ export function TemplateListPanel({
   loading,
   error,
   showAuthor = false,
+  showCreateButton = false,
 }: TemplateListPanelProps) {
-  const { openEditor } = useTemplateActions();
+  const { openEditor, openNewTemplate } = useTemplateActions();
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
-      <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
+        {showCreateButton ? (
+          <button
+            type="button"
+            onClick={openNewTemplate}
+            className="shrink-0 rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-900"
+          >
+            Создать шаблон
+          </button>
+        ) : null}
+      </div>
 
       {loading ? (
         <p className="text-sm text-zinc-500">Загрузка…</p>

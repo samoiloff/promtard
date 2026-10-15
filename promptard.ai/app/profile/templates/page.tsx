@@ -46,6 +46,7 @@ export default function ProfileTemplatesPage() {
       items={items}
       loading={loading}
       error={error}
+      showCreateButton
     />
   );
 }
