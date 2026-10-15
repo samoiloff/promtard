@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
+import { SaveIcon } from "@/components/icons/save-icon";
 import { usePromptComposer } from "@/contexts/prompt-composer-context";
 import { usePromptHistoryContext } from "@/contexts/prompt-history-context";
+import { useTemplateActions } from "@/hooks/use-template-actions";
 import { PROMPT_HISTORY_SIDEBAR_LIMIT } from "@/lib/history/constants";
 
 function formatWhen(iso: string) {
@@ -30,6 +32,7 @@ export function PromptHistorySidebar() {
   const isAuthenticated = status === "authenticated";
   const { items, loading, error } = usePromptHistoryContext();
   const { applyFromHistory } = usePromptComposer();
+  const { openNewTemplateFromDraft } = useTemplateActions();
   const recentItems = items.slice(0, PROMPT_HISTORY_SIDEBAR_LIMIT);
 
   return (
@@ -66,11 +69,14 @@ export function PromptHistorySidebar() {
         ) : (
           <ul className="flex flex-col gap-1">
             {recentItems.map((item) => (
-              <li key={item.id}>
+              <li
+                key={item.id}
+                className="flex items-stretch overflow-hidden rounded-xl transition hover:bg-zinc-200/80 dark:hover:bg-zinc-800/80"
+              >
                 <button
                   type="button"
                   onClick={() => applyFromHistory(item.content)}
-                  className="w-full rounded-xl px-3 py-2.5 text-left transition hover:bg-zinc-200/80 dark:hover:bg-zinc-800/80"
+                  className="min-w-0 flex-1 px-3 py-2.5 text-left"
                 >
                   <p className="text-sm leading-snug text-zinc-800 dark:text-zinc-200">
                     {truncate(item.content)}
@@ -78,6 +84,14 @@ export function PromptHistorySidebar() {
                   <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
                     {formatWhen(item.createdAt)}
                   </p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openNewTemplateFromDraft(item.content)}
+                  className="flex shrink-0 items-center justify-center border-l border-zinc-200/80 px-2.5 text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-800 dark:border-zinc-700/80 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                  aria-label="Save as template"
+                >
+                  <SaveIcon className="h-4 w-4" />
                 </button>
               </li>
             ))}

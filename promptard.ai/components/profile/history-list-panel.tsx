@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 
-import { FolderImportIcon } from "@/components/icons/folder-import-icon";
+import { SaveIcon } from "@/components/icons/save-icon";
 import { usePromptComposer } from "@/contexts/prompt-composer-context";
 import { usePromptHistoryContext } from "@/contexts/prompt-history-context";
-import { TEMPLATE_DRAFT_BODY_KEY } from "@/lib/templates/constants";
+import { useTemplateActions } from "@/hooks/use-template-actions";
 
 function formatWhen(iso: string) {
   try {
@@ -29,15 +29,11 @@ export function HistoryListPanel() {
   const router = useRouter();
   const { items, loading, error } = usePromptHistoryContext();
   const { applyFromHistory } = usePromptComposer();
+  const { openNewTemplateFromDraft } = useTemplateActions();
 
   function openInChat(content: string) {
     applyFromHistory(content);
     router.push("/");
-  }
-
-  function createTemplate(content: string) {
-    sessionStorage.setItem(TEMPLATE_DRAFT_BODY_KEY, content);
-    router.push("/templates/new");
   }
 
   return (
@@ -57,12 +53,12 @@ export function HistoryListPanel() {
           {items.map((item) => (
             <li
               key={item.id}
-              className="rounded-xl border border-zinc-200 px-4 py-3 dark:border-zinc-800"
+              className="flex items-stretch overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
             >
               <button
                 type="button"
                 onClick={() => openInChat(item.content)}
-                className="w-full text-left"
+                className="min-w-0 flex-1 px-4 py-3 text-left"
               >
                 <p className="text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">
                   {truncate(item.content)}
@@ -73,11 +69,11 @@ export function HistoryListPanel() {
               </button>
               <button
                 type="button"
-                onClick={() => createTemplate(item.content)}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 px-2.5 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                onClick={() => openNewTemplateFromDraft(item.content)}
+                className="flex shrink-0 items-center justify-center border-l border-zinc-200 px-3 text-zinc-500 transition hover:bg-zinc-50 hover:text-zinc-800 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
+                aria-label="Save as template"
               >
-                <FolderImportIcon className="shrink-0" />
-                Create template
+                <SaveIcon className="h-4 w-4" />
               </button>
             </li>
           ))}
