@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { useTemplateActions } from "@/hooks/use-template-actions";
 import type { PromptTemplateListItem } from "@/lib/templates/types";
 
 function formatWhen(iso: string) {
@@ -22,7 +24,6 @@ type TemplateListPanelProps = {
   items: PromptTemplateListItem[];
   loading: boolean;
   error: string | null;
-  getHref: (item: PromptTemplateListItem) => string;
   showAuthor?: boolean;
 };
 
@@ -32,9 +33,10 @@ export function TemplateListPanel({
   items,
   loading,
   error,
-  getHref,
   showAuthor = false,
 }: TemplateListPanelProps) {
+  const { openEditor } = useTemplateActions();
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
       <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
@@ -48,10 +50,13 @@ export function TemplateListPanel({
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
-            <li key={item.id}>
+            <li
+              key={item.id}
+              className="flex gap-2 rounded-xl border border-zinc-200 dark:border-zinc-800"
+            >
               <Link
-                href={getHref(item)}
-                className="block rounded-xl border border-zinc-200 px-4 py-3 transition hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900/50"
+                href={`/?template=${item.id}`}
+                className="min-w-0 flex-1 px-4 py-3 transition hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
               >
                 <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {item.title ?? item.bodyPreview}
@@ -75,6 +80,15 @@ export function TemplateListPanel({
                   {formatWhen(item.updatedAt)}
                 </p>
               </Link>
+              <button
+                type="button"
+                onClick={() => void openEditor(item.id, item.canEdit)}
+                className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                aria-label="Редактировать шаблон"
+              >
+                <PencilIcon />
+                <span>редактировать</span>
+              </button>
             </li>
           ))}
         </ul>

@@ -47,7 +47,6 @@ export default function ProfileLikesPage() {
       loading={loading}
       error={error}
       showAuthor
-      getHref={(item) => `/templates/${item.id}`}
     />
   );
 }

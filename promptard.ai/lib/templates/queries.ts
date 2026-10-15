@@ -38,7 +38,7 @@ async function loadTagsByTemplateIds(
 function toListItem(
   row: typeof promptTemplates.$inferSelect,
   tagNames: string[],
-  authorName?: string | null,
+  options: { authorName?: string | null; canEdit: boolean },
 ): PromptTemplateListItem {
   return {
     id: row.id,
@@ -46,7 +46,8 @@ function toListItem(
     bodyPreview: previewTemplateBody(row.body),
     tags: tagNames,
     updatedAt: row.updatedAt.toISOString(),
-    authorName,
+    authorName: options.authorName,
+    canEdit: options.canEdit,
   };
 }
 
@@ -60,7 +61,9 @@ export async function listPromptTemplatesForAuthor(
     .orderBy(desc(promptTemplates.updatedAt));
 
   const tagMap = await loadTagsByTemplateIds(rows.map((r) => r.id));
-  return rows.map((row) => toListItem(row, tagMap.get(row.id) ?? []));
+  return rows.map((row) =>
+    toListItem(row, tagMap.get(row.id) ?? [], { canEdit: true }),
+  );
 }
 
 export async function listLikedPromptTemplatesForUser(
@@ -83,6 +86,9 @@ export async function listLikedPromptTemplatesForUser(
   const tagMap = await loadTagsByTemplateIds(rows.map((r) => r.template.id));
 
   return rows.map(({ template, authorName }) =>
-    toListItem(template, tagMap.get(template.id) ?? [], authorName),
+    toListItem(template, tagMap.get(template.id) ?? [], {
+      authorName,
+      canEdit: false,
+    }),
   );
 }

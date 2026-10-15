@@ -21,6 +21,7 @@ export type PublicTemplateListItem = {
   createdAt: string;
   likeCount: number;
   likedByMe: boolean;
+  canEdit: boolean;
 };
 
 export type PromptTemplateListItem = {
@@ -30,6 +31,7 @@ export type PromptTemplateListItem = {
   tags: string[];
   updatedAt: string;
   authorName?: string | null;
+  canEdit: boolean;
 };
 
 export type PromptTemplateViewItem = PromptTemplateItem & {

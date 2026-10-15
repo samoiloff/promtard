@@ -46,7 +46,6 @@ export default function ProfileTemplatesPage() {
       items={items}
       loading={loading}
       error={error}
-      getHref={(item) => `/templates/${item.id}/edit`}
     />
   );
 }

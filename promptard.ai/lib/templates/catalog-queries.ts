@@ -83,6 +83,7 @@ function toPublicItems(
       createdAt: template.createdAt.toISOString(),
       likeCount: counts.get(template.id) ?? 0,
       likedByMe: liked.has(template.id),
+      canEdit: Boolean(userId && template.authorId === userId),
     })),
   );
 }
@@ -176,6 +177,7 @@ export async function listPopularPublicTemplates(
     createdAt: template.createdAt.toISOString(),
     likeCount,
     likedByMe: liked.has(template.id),
+    canEdit: Boolean(userId && template.authorId === userId),
   }));
 }
 
