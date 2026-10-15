@@ -3,6 +3,8 @@
 import Link from "next/link";
 
 import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TemplateCardSideAction } from "@/components/templates/template-card-side-action";
+import { TemplateCardTags } from "@/components/templates/template-card-tags";
 import { useTemplateActions } from "@/hooks/use-template-actions";
 import type { PromptTemplateListItem } from "@/lib/templates/types";
 
@@ -37,7 +39,7 @@ export function TemplateListPanel({
   showAuthor = false,
   showCreateButton = false,
 }: TemplateListPanelProps) {
-  const { openEditor, openNewTemplate } = useTemplateActions();
+  const { openEditor, openInChat, openNewTemplate } = useTemplateActions();
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
@@ -67,41 +69,41 @@ export function TemplateListPanel({
               key={item.id}
               className="flex gap-2 rounded-xl border border-zinc-200 dark:border-zinc-800"
             >
-              <Link
-                href={`/?template=${item.id}`}
-                className="min-w-0 flex-1 px-4 py-3 transition hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-              >
-                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                  {item.title ?? item.bodyPreview}
-                </p>
-                {item.title ? (
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {item.bodyPreview}
+              <div className="min-w-0 flex-1 px-4 py-3">
+                <Link
+                  href={`/templates/${item.id}`}
+                  className="block transition hover:opacity-80"
+                >
+                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    {item.title ?? item.bodyPreview}
                   </p>
-                ) : null}
-                {showAuthor && item.authorName ? (
-                  <p className="mt-1 text-xs text-zinc-500">
-                    Author: {item.authorName}
-                  </p>
-                ) : null}
-                {item.tags.length > 0 ? (
-                  <p className="mt-2 text-xs text-zinc-500">
-                    {item.tags.join(" · ")}
-                  </p>
-                ) : null}
+                  {item.title ? (
+                    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                      {item.bodyPreview}
+                    </p>
+                  ) : null}
+                  {showAuthor && item.authorName ? (
+                    <p className="mt-1 text-xs text-zinc-500">
+                      Author: {item.authorName}
+                    </p>
+                  ) : null}
+                </Link>
+                <TemplateCardTags tags={item.tags} />
                 <p className="mt-2 text-xs text-zinc-400">
                   {formatWhen(item.updatedAt)}
                 </p>
-              </Link>
-              <button
-                type="button"
+              </div>
+              <TemplateCardSideAction
+                label="Run"
+                onClick={() => openInChat(item.id)}
+                ariaLabel="Run template"
+              />
+              <TemplateCardSideAction
+                label="edit"
                 onClick={() => void openEditor(item.id, item.canEdit)}
-                className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
-                aria-label="Edit template"
-              >
-                <PencilIcon />
-                <span>edit</span>
-              </button>
+                ariaLabel="Edit template"
+                icon={<PencilIcon />}
+              />
             </li>
           ))}
         </ul>

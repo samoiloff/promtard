@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { HeartIcon } from "@/components/icons/heart-icon";
 import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TemplateCardSideAction } from "@/components/templates/template-card-side-action";
+import { TemplateCardTags } from "@/components/templates/template-card-tags";
 import { fetchJson } from "@/lib/api/read-json-response";
 import { useTemplateActions } from "@/hooks/use-template-actions";
 import type { PublicTemplateListItem } from "@/lib/templates/types";
@@ -35,7 +37,7 @@ export function PublicTemplateList({
   onItemsChange,
 }: PublicTemplateListProps) {
   const { data: session } = useSession();
-  const { openEditor } = useTemplateActions();
+  const { openEditor, openInChat } = useTemplateActions();
   const [loginOpen, setLoginOpen] = useState(false);
 
   async function toggleLike(item: PublicTemplateListItem) {
@@ -84,20 +86,24 @@ export function PublicTemplateList({
             key={item.id}
             className="flex gap-0 rounded-xl border border-zinc-200 dark:border-zinc-800"
           >
-            <Link
-              href={`/?template=${item.id}`}
-              className="min-w-0 flex-1 px-4 py-3 transition hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-            >
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                {item.title ?? "Untitled"}
-              </p>
-              <p className="mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {item.bodyPreview}
-              </p>
-              <p className="mt-2 text-xs text-zinc-500">
-                {item.authorName ?? "Author"} · {formatCreated(item.createdAt)}
-              </p>
-            </Link>
+            <div className="min-w-0 flex-1 px-4 py-3">
+              <Link
+                href={`/templates/${item.id}`}
+                className="block transition hover:opacity-80"
+              >
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {item.title ?? "Untitled"}
+                </p>
+                <p className="mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  {item.bodyPreview}
+                </p>
+                <p className="mt-2 text-xs text-zinc-500">
+                  {item.authorName ?? "Author"} ·{" "}
+                  {formatCreated(item.createdAt)}
+                </p>
+              </Link>
+              <TemplateCardTags tags={item.tags} />
+            </div>
             <div className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 dark:border-zinc-800">
               <button
                 type="button"
@@ -115,15 +121,17 @@ export function PublicTemplateList({
                 {item.likeCount}
               </span>
             </div>
-            <button
-              type="button"
+            <TemplateCardSideAction
+              label="Run"
+              onClick={() => openInChat(item.id)}
+              ariaLabel="Run template"
+            />
+            <TemplateCardSideAction
+              label="edit"
               onClick={() => void openEditor(item.id, item.canEdit)}
-              className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
-              aria-label="Edit template"
-            >
-              <PencilIcon />
-              <span>edit</span>
-            </button>
+              ariaLabel="Edit template"
+              icon={<PencilIcon />}
+            />
           </li>
         ))}
       </ul>

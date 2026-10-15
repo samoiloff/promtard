@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { PublicTemplateList } from "@/components/browse/public-template-list";
 import { fetchJson } from "@/lib/api/read-json-response";
 import type { PublicTemplateListItem } from "@/lib/templates/types";
 
-export default function BrowseSearchPage() {
-  const [query, setQuery] = useState("");
-  const [debounced, setDebounced] = useState("");
+function BrowseSearchContent({ initialQ }: { initialQ: string }) {
+  const [query, setQuery] = useState(initialQ);
+  const [debounced, setDebounced] = useState(initialQ.trim());
   const [items, setItems] = useState<PublicTemplateListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +51,8 @@ export default function BrowseSearchPage() {
     };
   }, [debounced]);
 
+  const showResults = debounced.length > 0;
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
       <h1 className="text-lg font-semibold tracking-tight">Search templates</h1>
@@ -69,7 +72,7 @@ export default function BrowseSearchPage() {
         <p className="text-sm text-zinc-500">Searching…</p>
       ) : error ? (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-      ) : debounced ? (
+      ) : showResults ? (
         <PublicTemplateList
           items={items}
           emptyMessage="No results found."
@@ -79,5 +82,25 @@ export default function BrowseSearchPage() {
         <p className="text-sm text-zinc-500">Type to search.</p>
       )}
     </div>
+  );
+}
+
+function BrowseSearchWithParams() {
+  const searchParams = useSearchParams();
+  const initialQ = searchParams.get("q") ?? "";
+  return <BrowseSearchContent key={initialQ} initialQ={initialQ} />;
+}
+
+export default function BrowseSearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
+          <p className="text-sm text-zinc-500">Loading…</p>
+        </div>
+      }
+    >
+      <BrowseSearchWithParams />
+    </Suspense>
   );
 }

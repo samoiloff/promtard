@@ -1,13 +1,41 @@
 ---
-description: Терминология продукта Promptard (шаблоны, запуск)
+description: Терминология продукта Promptard (шаблоны, карточка, запуск)
 alwaysApply: true
 ---
 
 # Терминология Promptard
 
+## Карточка шаблона
+
+**Карточка шаблона** (template card) — элемент списка с краткой информацией о шаблоне: заголовок/preview, теги, метаданные, действия по краям. Клик по заголовку/preview ведёт на **просмотр** `/templates/[id]`; **запуск шаблона** — только кнопка **Run** на карточке. Тег — ссылка на `/browse/search?q=<тег>`.
+
+Где показываются карточки:
+
+| Раздел в UI | Путь |
+|-------------|------|
+| My templates | `/profile/templates` |
+| My likes | `/profile/likes` |
+| Recent | `/browse/recent` |
+| Popular | `/browse/popular` |
+| Search | `/browse/search` |
+
+### Технические якоря (карточка шаблона)
+
+- Профиль (свои / лайки): [`TemplateListPanel`](promptard.ai/components/profile/template-list-panel.tsx) — **Run**, **edit**, [`TemplateCardTags`](promptard.ai/components/templates/template-card-tags.tsx)
+- Каталог (recent / popular / search): [`PublicTemplateList`](promptard.ai/components/browse/public-template-list.tsx) — like, **Run**, **edit**, теги
+- Данные: `PromptTemplateListItem` (profile), `PublicTemplateListItem` (browse)
+
+Не путать с:
+
+- **страницей просмотра** `/templates/[id]` (полное тело шаблона, не карточка в списке);
+- **редактором** `/templates/new`, `/templates/[id]/edit`;
+- **композером на главной** после запуска.
+
+В задачах и обсуждениях используйте **«карточка шаблона»**; в коде — `TemplateListPanel` / `PublicTemplateList` / list item, без обязательного рефакторинга имён.
+
 ## Запуск шаблона
 
-**Запуск шаблона** — сценарий, когда пользователь выбирает шаблон (клик по карточке или ссылке) и попадает на **главную** (`/`) с этим шаблоном в композере: подставляется текст, показываются поля **параметров** (`${имя}`), пользователь заполняет их и отправляет промпт в чат.
+**Запуск шаблона** — сценарий, когда пользователь нажимает **Run** на **карточке шаблона** и попадает на **главную** (`/`) с этим шаблоном в композере: подставляется текст, показываются поля **параметров** (`${имя}`), пользователь заполняет их и отправляет промпт в чат.
 
 Не путать с:
 
@@ -20,6 +48,6 @@ alwaysApply: true
 - URL: `/?template=<id>`
 - Загрузка: `HomeTemplateLoader` → `loadTemplateForHome` в `prompt-composer-context`
 - UI: `ChatPanel` / `HighlightedPromptTextarea`, блок «Параметры», отправка подставленного текста
-- Точки входа: списки в browse/profile (`href={`/?template=${id}`}`), `useTemplateActions` (`router.push`)
+- Точки входа: кнопка **Run** в карточках → `useTemplateActions.openInChat` (`/?template=<id>`)
 
 В обсуждениях, коммитах и задачах для этого сценария используйте формулировку **«запуск шаблона»**; в коде и API допустимы имена вроде `loadTemplateForHome`, `template` query param — менять их только при явной задаче на рефакторинг.

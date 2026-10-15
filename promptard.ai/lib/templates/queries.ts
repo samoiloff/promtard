@@ -1,39 +1,10 @@
-import { desc, eq, inArray } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { db } from "@/lib/db";
-import {
-  promptTemplateLikes,
-  promptTemplateTags,
-  promptTemplates,
-  tags,
-  users,
-} from "@/lib/db/schema";
+import { promptTemplateLikes, promptTemplates, users } from "@/lib/db/schema";
 import { previewTemplateBody } from "@/lib/templates/preview";
+import { loadTagsByTemplateIds } from "@/lib/templates/tag-queries";
 import type { PromptTemplateListItem } from "@/lib/templates/types";
-
-async function loadTagsByTemplateIds(
-  templateIds: string[],
-): Promise<Map<string, string[]>> {
-  const map = new Map<string, string[]>();
-  if (templateIds.length === 0) return map;
-
-  const rows = await db
-    .select({
-      templateId: promptTemplateTags.templateId,
-      name: tags.name,
-    })
-    .from(promptTemplateTags)
-    .innerJoin(tags, eq(promptTemplateTags.tagId, tags.id))
-    .where(inArray(promptTemplateTags.templateId, templateIds));
-
-  for (const row of rows) {
-    const list = map.get(row.templateId) ?? [];
-    list.push(row.name);
-    map.set(row.templateId, list);
-  }
-
-  return map;
-}
 
 function toListItem(
   row: typeof promptTemplates.$inferSelect,

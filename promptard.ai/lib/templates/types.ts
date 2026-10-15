@@ -17,6 +17,7 @@ export type PublicTemplateListItem = {
   id: string;
   title: string | null;
   bodyPreview: string;
+  tags: string[];
   authorName: string | null;
   createdAt: string;
   likeCount: number;

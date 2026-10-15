@@ -9,6 +9,7 @@ import {
   users,
 } from "@/lib/db/schema";
 import { previewTemplateBody } from "@/lib/templates/preview";
+import { loadTagsByTemplateIds } from "@/lib/templates/tag-queries";
 import type { PublicTemplateListItem } from "@/lib/templates/types";
 
 const DEFAULT_LIMIT = 50;
@@ -74,11 +75,13 @@ function toPublicItems(
   return Promise.all([
     likeCountsForTemplates(ids),
     userId ? likedTemplateIdsForUser(userId, ids) : Promise.resolve(new Set()),
-  ]).then(([counts, liked]) =>
+    loadTagsByTemplateIds(ids),
+  ]).then(([counts, liked, tagMap]) =>
     rows.map(({ template, authorName }) => ({
       id: template.id,
       title: template.title,
       bodyPreview: previewTemplateBody(template.body),
+      tags: tagMap.get(template.id) ?? [],
       authorName,
       createdAt: template.createdAt.toISOString(),
       likeCount: counts.get(template.id) ?? 0,
@@ -161,18 +164,18 @@ export async function listPopularPublicTemplates(
     )
     .limit(take);
 
+  const templateIds = rows.map((r) => r.template.id);
   const liked =
-    userId && rows.length > 0
-      ? await likedTemplateIdsForUser(
-          userId,
-          rows.map((r) => r.template.id),
-        )
+    userId && templateIds.length > 0
+      ? await likedTemplateIdsForUser(userId, templateIds)
       : new Set<string>();
+  const tagMap = await loadTagsByTemplateIds(templateIds);
 
   return rows.map(({ template, authorName, likeCount }) => ({
     id: template.id,
     title: template.title,
     bodyPreview: previewTemplateBody(template.body),
+    tags: tagMap.get(template.id) ?? [],
     authorName,
     createdAt: template.createdAt.toISOString(),
     likeCount,
