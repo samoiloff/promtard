@@ -26,10 +26,10 @@ function OAuthButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+      className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-center text-xs font-medium leading-snug text-zinc-900 transition hover:bg-zinc-50 sm:text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
     >
-      {icon}
-      {label}
+      <span className="shrink-0">{icon}</span>
+      <span>{label}</span>
     </button>
   );
 }
@@ -80,7 +80,7 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="fixed inset-0 z-50 m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-xl backdrop:bg-black/50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100"
+      className="fixed inset-0 z-50 m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-xl backdrop:bg-black/50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100"
       onCancel={(event) => {
         event.preventDefault();
         requestClose();
@@ -92,7 +92,7 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
       <div className="p-6">
         <div className="mb-6 flex items-start justify-between gap-4">
           <h2 id={titleId} className="text-xl font-semibold tracking-tight">
-            Log In
+            Log in to Promptard.ai
           </h2>
           <button
             type="button"
@@ -110,14 +110,14 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
           </p>
         ) : null}
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2">
           <OAuthButton
-            label="Google"
+            label="Log in with Google"
             icon={<GoogleIcon />}
             onClick={() => handleOAuth("google")}
           />
           <OAuthButton
-            label="GitHub"
+            label="Log in with GitHub"
             icon={<GitHubIcon />}
             onClick={() => handleOAuth("github")}
           />
