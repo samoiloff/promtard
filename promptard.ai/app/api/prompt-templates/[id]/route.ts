@@ -10,12 +10,10 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(_request: Request, context: RouteContext) {
   const session = await auth();
-  if (!session?.user?.id) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const userId = session?.user?.id ?? null;
 
   const { id } = await context.params;
-  const item = await getPromptTemplateForViewer(session.user.id, id);
+  const item = await getPromptTemplateForViewer(userId, id);
   if (!item) {
     return Response.json({ error: "Not found" }, { status: 404 });
   }
@@ -51,6 +49,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     id,
     parsed.data.body,
     parsed.data.tags,
+    parsed.data.isPublic,
   );
 
   if (!item) {

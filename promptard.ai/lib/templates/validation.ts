@@ -16,11 +16,13 @@ export const templateTagsSchema = z.array(z.string().min(1).max(64)).max(50);
 export const createTemplateBodySchema = z.object({
   body: templateBodySchema,
   tags: templateTagsSchema.default([]),
+  isPublic: z.boolean().optional().default(true),
 });
 
 export const updateTemplateBodySchema = z.object({
   body: templateBodySchema,
   tags: templateTagsSchema.default([]),
+  isPublic: z.boolean().optional(),
 });
 
 export function deriveTitle(body: string): string {

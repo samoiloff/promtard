@@ -71,6 +71,7 @@ export function EditTemplateLoader({ templateId }: { templateId: string }) {
       templateId={item.id}
       initialBody={item.body}
       initialTags={item.tags}
+      initialIsPublic={item.isPublic}
     />
   );
 }

@@ -27,7 +27,7 @@ export function TemplateView({ item }: TemplateViewProps) {
             {item.title ?? "Шаблон"}
           </h1>
           <Link
-            href="/profile/likes"
+            href="/browse/recent"
             className="text-sm font-medium text-zinc-500 transition hover:text-zinc-800 dark:hover:text-zinc-200"
           >
             Назад

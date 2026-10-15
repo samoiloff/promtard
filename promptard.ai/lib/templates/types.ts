@@ -8,8 +8,19 @@ export type PromptTemplateItem = {
   title: string | null;
   body: string;
   tags: string[];
+  isPublic: boolean;
   createdAt: string;
   updatedAt: string;
+};
+
+export type PublicTemplateListItem = {
+  id: string;
+  title: string | null;
+  bodyPreview: string;
+  authorName: string | null;
+  createdAt: string;
+  likeCount: number;
+  likedByMe: boolean;
 };
 
 export type PromptTemplateListItem = {

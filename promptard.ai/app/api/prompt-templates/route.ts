@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     session.user.id,
     parsed.data.body,
     parsed.data.tags,
+    parsed.data.isPublic,
   );
 
   return Response.json({ item }, { status: 201 });

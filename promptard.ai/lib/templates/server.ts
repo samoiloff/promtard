@@ -60,6 +60,7 @@ function toItem(
     title: row.title,
     body: row.body,
     tags: tagNames,
+    isPublic: !row.isPrivate,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -84,7 +85,7 @@ async function userLikedTemplate(
 }
 
 export async function getPromptTemplateForViewer(
-  userId: string,
+  userId: string | null,
   templateId: string,
 ): Promise<PromptTemplateViewItem | null> {
   const [row] = await db
@@ -98,12 +99,16 @@ export async function getPromptTemplateForViewer(
   const tagNames = await loadTagsForTemplate(row.id);
   const item = toItem(row, tagNames);
 
-  if (row.authorId === userId) {
+  if (userId && row.authorId === userId) {
     return { ...item, canEdit: true };
   }
 
-  const liked = await userLikedTemplate(userId, templateId);
-  if (row.isPrivate && !liked) return null;
+  if (row.isPrivate) {
+    if (!userId) return null;
+    const liked = await userLikedTemplate(userId, templateId);
+    if (!liked) return null;
+    return { ...item, canEdit: false };
+  }
 
   return { ...item, canEdit: false };
 }
@@ -133,6 +138,7 @@ export async function createPromptTemplateForUser(
   userId: string,
   body: string,
   tagNames: string[],
+  isPublic = true,
 ): Promise<PromptTemplateItem> {
   const title = deriveTitle(body);
   const now = new Date();
@@ -143,6 +149,7 @@ export async function createPromptTemplateForUser(
       authorId: userId,
       title,
       body,
+      isPrivate: !isPublic,
       updatedAt: now,
     })
     .returning();
@@ -165,6 +172,7 @@ export async function updatePromptTemplateForUser(
   templateId: string,
   body: string,
   tagNames: string[],
+  isPublic?: boolean,
 ): Promise<PromptTemplateItem | null> {
   const title = deriveTitle(body);
   const now = new Date();
@@ -174,6 +182,7 @@ export async function updatePromptTemplateForUser(
     .set({
       body,
       title,
+      ...(isPublic !== undefined ? { isPrivate: !isPublic } : {}),
       updatedAt: now,
     })
     .where(

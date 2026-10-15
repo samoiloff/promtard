@@ -30,6 +30,7 @@ type TemplateEditorProps = {
   templateId?: string;
   initialBody?: string;
   initialTags?: string[];
+  initialIsPublic?: boolean;
 };
 
 function createInitialEditorState(
@@ -57,6 +58,7 @@ export function TemplateEditor({
   templateId,
   initialBody = "",
   initialTags = [],
+  initialIsPublic = true,
 }: TemplateEditorProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -69,6 +71,7 @@ export function TemplateEditor({
   const [parameters, setParameters] = useState<TemplateParameter[]>(
     initial.parameters,
   );
+  const [isPublic, setIsPublic] = useState(initialIsPublic);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
@@ -158,7 +161,11 @@ export function TemplateEditor({
         }>("/api/prompt-templates", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ body: parsedBody.data, tags }),
+          body: JSON.stringify({
+            body: parsedBody.data,
+            tags,
+            isPublic,
+          }),
         });
         if (!response.ok) {
           throw new Error(data.error ?? "Не удалось сохранить");
@@ -176,7 +183,11 @@ export function TemplateEditor({
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ body: parsedBody.data, tags }),
+          body: JSON.stringify({
+            body: parsedBody.data,
+            tags,
+            isPublic,
+          }),
         },
       );
       if (!response.ok) {
@@ -232,6 +243,21 @@ export function TemplateEditor({
             className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
             placeholder="через запятую, например: авто, страна"
           />
+        </label>
+
+        <label className="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            className="h-4 w-4 rounded border-zinc-300"
+          />
+          <span className="text-sm text-zinc-700 dark:text-zinc-300">
+            Публичный
+          </span>
+          <span className="text-xs text-zinc-500">
+            (виден в «Последние», «Популярные» и в поиске)
+          </span>
         </label>
 
         <section className="flex flex-col gap-3">
