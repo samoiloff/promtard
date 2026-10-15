@@ -27,7 +27,7 @@ export function PromptHistorySidebar() {
 
   return (
     <aside
-      className="flex h-full w-full flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950"
+      className="flex h-full min-h-0 w-full flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950"
     >
       <div className="border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -37,7 +37,7 @@ export function PromptHistorySidebar() {
           Недавние промпты
         </p>
       </div>
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain p-2">
         {loading ? (
           <p className="px-2 py-3 text-sm text-zinc-500">Загрузка…</p>
         ) : error ? (
