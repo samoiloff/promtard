@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# local documentation and exports (e.g. OAuth JSON from Google Console)
+/docs/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
