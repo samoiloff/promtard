@@ -1,10 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { Suspense, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
+
+import { LoginModal } from "@/components/auth/login-modal";
 
 export function AuthHeader() {
   const { data: session, status } = useSession();
+  const [loginOpen, setLoginOpen] = useState(false);
 
   if (status === "loading") {
     return (
@@ -14,22 +18,18 @@ export function AuthHeader() {
 
   if (!session?.user) {
     return (
-      <div className="flex flex-wrap items-center justify-end gap-2">
+      <>
         <button
           type="button"
-          onClick={() => signIn("google")}
-          className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium transition hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          onClick={() => setLoginOpen(true)}
+          className="rounded-full bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          Google
+          Log In
         </button>
-        <button
-          type="button"
-          onClick={() => signIn("facebook")}
-          className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-        >
-          Facebook
-        </button>
-      </div>
+        <Suspense fallback={null}>
+          <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
+        </Suspense>
+      </>
     );
   }
 
