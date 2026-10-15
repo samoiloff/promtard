@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Promptard",
-  description: "Персональная доска промптов",
+  description: "Personal prompt board",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

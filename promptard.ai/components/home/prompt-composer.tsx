@@ -23,7 +23,7 @@ export function PromptComposer() {
       setDraft("");
     } catch (error) {
       setSubmitError(
-        error instanceof Error ? error.message : "Не удалось сохранить промпт",
+        error instanceof Error ? error.message : "Failed to save prompt",
       );
     } finally {
       setSubmitting(false);
@@ -34,11 +34,10 @@ export function PromptComposer() {
     <div className="flex w-full max-w-2xl flex-col items-center gap-8 px-4">
       <div className="text-center">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
-          Чем могу помочь?
+          How can I help?
         </h1>
         <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
-          Промпты сохраняются в истории. Ответ модели подключим на следующем
-          шаге.
+          Prompts are saved to history. Model replies will be wired up next.
         </p>
       </div>
 
@@ -56,21 +55,21 @@ export function PromptComposer() {
             }
           }}
           rows={4}
-          placeholder="Напишите промпт…"
+          placeholder="Write a prompt…"
           className="w-full resize-none bg-transparent px-2 py-2 text-base text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
         />
         <div className="mt-2 flex items-center justify-between gap-3 px-2 pb-1">
           {submitError ? (
             <p className="text-sm text-red-600 dark:text-red-400">{submitError}</p>
           ) : (
-            <span className="text-xs text-zinc-400">Enter — отправить</span>
+            <span className="text-xs text-zinc-400">Enter to send</span>
           )}
           <button
             type="submit"
             disabled={submitting || !draft.trim()}
             className="rounded-full bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition enabled:hover:bg-zinc-700 disabled:opacity-40 dark:bg-zinc-100 dark:text-zinc-900 dark:enabled:hover:bg-zinc-300"
           >
-            {submitting ? "Сохранение…" : "Отправить"}
+            {submitting ? "Saving…" : "Send"}
           </button>
         </div>
       </form>

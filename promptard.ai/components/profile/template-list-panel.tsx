@@ -8,7 +8,7 @@ import type { PromptTemplateListItem } from "@/lib/templates/types";
 
 function formatWhen(iso: string) {
   try {
-    return new Intl.DateTimeFormat("ru-RU", {
+    return new Intl.DateTimeFormat("en-US", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -49,13 +49,13 @@ export function TemplateListPanel({
             onClick={openNewTemplate}
             className="shrink-0 rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-900"
           >
-            Создать шаблон
+            Create template
           </button>
         ) : null}
       </div>
 
       {loading ? (
-        <p className="text-sm text-zinc-500">Загрузка…</p>
+        <p className="text-sm text-zinc-500">Loading…</p>
       ) : error ? (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
       ) : items.length === 0 ? (
@@ -81,7 +81,7 @@ export function TemplateListPanel({
                 ) : null}
                 {showAuthor && item.authorName ? (
                   <p className="mt-1 text-xs text-zinc-500">
-                    Автор: {item.authorName}
+                    Author: {item.authorName}
                   </p>
                 ) : null}
                 {item.tags.length > 0 ? (
@@ -97,10 +97,10 @@ export function TemplateListPanel({
                 type="button"
                 onClick={() => void openEditor(item.id, item.canEdit)}
                 className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
-                aria-label="Редактировать шаблон"
+                aria-label="Edit template"
               >
                 <PencilIcon />
-                <span>редактировать</span>
+                <span>edit</span>
               </button>
             </li>
           ))}

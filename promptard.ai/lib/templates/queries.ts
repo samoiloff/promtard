@@ -88,7 +88,7 @@ export async function listLikedPromptTemplatesForUser(
   return rows.map(({ template, authorName }) =>
     toListItem(template, tagMap.get(template.id) ?? [], {
       authorName,
-      canEdit: false,
+      canEdit: template.authorId === userId,
     }),
   );
 }

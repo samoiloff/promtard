@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("GET /api/prompt-templates/public/search", error);
     return Response.json(
-      { error: "Не удалось выполнить поиск" },
+      { error: "Search failed" },
       { status: 500 },
     );
   }

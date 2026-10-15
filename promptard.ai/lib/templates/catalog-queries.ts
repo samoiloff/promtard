@@ -233,12 +233,17 @@ export async function likePublicTemplate(
   templateId: string,
 ): Promise<{ likeCount: number; likedByMe: true } | null> {
   const [template] = await db
-    .select({ id: promptTemplates.id, isPrivate: promptTemplates.isPrivate })
+    .select({
+      id: promptTemplates.id,
+      isPrivate: promptTemplates.isPrivate,
+      authorId: promptTemplates.authorId,
+    })
     .from(promptTemplates)
     .where(eq(promptTemplates.id, templateId))
     .limit(1);
 
-  if (!template || template.isPrivate) return null;
+  if (!template) return null;
+  if (template.isPrivate && template.authorId !== userId) return null;
 
   await db
     .insert(promptTemplateLikes)

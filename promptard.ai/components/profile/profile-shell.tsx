@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/profile/templates", label: "Мои шаблоны" },
-  { href: "/profile/likes", label: "Мои лайки" },
-  { href: "/profile/history", label: "История" },
+  { href: "/profile/templates", label: "My templates" },
+  { href: "/profile/likes", label: "My likes" },
+  { href: "/profile/history", label: "History" },
 ] as const;
 
 export function ProfileShell({ children }: { children: React.ReactNode }) {
@@ -16,7 +16,7 @@ export function ProfileShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-0 flex-1 overflow-hidden">
       <nav
         className="flex w-56 shrink-0 flex-col gap-1 border-r border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-950"
-        aria-label="Профиль"
+        aria-label="Profile"
       >
         {navItems.map((item) => {
           const active = pathname === item.href;

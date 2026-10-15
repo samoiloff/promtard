@@ -24,10 +24,10 @@ export function TemplateViewLoader({ templateId }: { templateId: string }) {
           error?: string;
         }>(`/api/prompt-templates/${templateId}`);
         if (!response.ok) {
-          throw new Error(data.error ?? "Не удалось загрузить шаблон");
+          throw new Error(data.error ?? "Failed to load template");
         }
         if (!data.item) {
-          throw new Error("Шаблон не найден");
+          throw new Error("Template not found");
         }
         if (!cancelled) {
           if (data.item.canEdit) {
@@ -39,7 +39,7 @@ export function TemplateViewLoader({ templateId }: { templateId: string }) {
       } catch (err) {
         if (!cancelled) {
           setLoadError(
-            err instanceof Error ? err.message : "Ошибка загрузки",
+            err instanceof Error ? err.message : "Load failed",
           );
         }
       } finally {
@@ -55,7 +55,7 @@ export function TemplateViewLoader({ templateId }: { templateId: string }) {
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center p-8 text-sm text-zinc-500">
-        Загрузка…
+        Loading…
       </div>
     );
   }
@@ -63,7 +63,7 @@ export function TemplateViewLoader({ templateId }: { templateId: string }) {
   if (loadError || !item) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-2 p-8 text-sm text-zinc-500">
-        <p>{loadError ?? "Шаблон не найден"}</p>
+        <p>{loadError ?? "Template not found"}</p>
       </div>
     );
   }

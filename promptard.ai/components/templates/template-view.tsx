@@ -24,13 +24,13 @@ export function TemplateView({ item }: TemplateViewProps) {
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-lg font-semibold tracking-tight">
-            {item.title ?? "Шаблон"}
+            {item.title ?? "Template"}
           </h1>
           <Link
             href="/browse/recent"
             className="text-sm font-medium text-zinc-500 transition hover:text-zinc-800 dark:hover:text-zinc-200"
           >
-            Назад
+            Back
           </Link>
         </div>
 
@@ -51,14 +51,14 @@ export function TemplateView({ item }: TemplateViewProps) {
             className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             <FolderImportIcon />
-            Создать свой шаблон на основе этого
+            Create your template from this
           </button>
           {item.canEdit ? (
             <Link
               href={`/templates/${item.id}/edit`}
               className="rounded-full border border-zinc-300 px-6 py-2.5 text-sm font-medium transition hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-900"
             >
-              Редактировать
+              Edit
             </Link>
           ) : null}
         </div>

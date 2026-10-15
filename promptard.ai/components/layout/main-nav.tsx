@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
-  { href: "/browse/recent", label: "Последние" },
-  { href: "/browse/popular", label: "Популярные" },
-  { href: "/browse/search", label: "Поиск" },
+  { href: "/browse/recent", label: "Recent" },
+  { href: "/browse/popular", label: "Popular" },
+  { href: "/browse/search", label: "Search" },
 ] as const;
 
 export function MainNav() {
@@ -15,7 +15,7 @@ export function MainNav() {
   return (
     <nav
       className="flex flex-wrap items-center gap-1 sm:gap-2"
-      aria-label="Главное меню"
+      aria-label="Main menu"
     >
       {items.map((item) => {
         const active = pathname === item.href;

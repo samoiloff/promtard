@@ -25,6 +25,7 @@ type PromptComposerContextValue = {
   setParameterValue: (name: string, value: string) => void;
   loadTemplateForHome: (id: string, body: string, canEdit: boolean) => void;
   clearActiveTemplate: () => void;
+  resetHomeComposer: () => void;
 };
 
 const PromptComposerContext = createContext<PromptComposerContextValue | null>(
@@ -92,6 +93,14 @@ export function PromptComposerProvider({
     setParameterValues({});
   }, []);
 
+  const resetHomeComposer = useCallback(() => {
+    setActiveTemplateId(null);
+    setCanEditActiveTemplate(false);
+    setTemplateBody(null);
+    setParameterValues({});
+    setDraftState("");
+  }, []);
+
   const value = useMemo(
     () => ({
       draft,
@@ -104,6 +113,7 @@ export function PromptComposerProvider({
       setParameterValue,
       loadTemplateForHome,
       clearActiveTemplate,
+      resetHomeComposer,
     }),
     [
       draft,
@@ -116,6 +126,7 @@ export function PromptComposerProvider({
       setParameterValue,
       loadTemplateForHome,
       clearActiveTemplate,
+      resetHomeComposer,
     ],
   );
 

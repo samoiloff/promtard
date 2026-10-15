@@ -13,7 +13,7 @@ export async function readJsonResponse<T>(response: Response): Promise<T> {
 
   if (!text.trim()) {
     if (!response.ok) {
-      throw new ApiError(`Ошибка запроса (${response.status})`, response.status);
+      throw new ApiError(`Request failed (${response.status})`, response.status);
     }
     return {} as T;
   }
@@ -23,8 +23,8 @@ export async function readJsonResponse<T>(response: Response): Promise<T> {
   } catch {
     throw new ApiError(
       response.ok
-        ? "Некорректный ответ сервера"
-        : `Ошибка запроса (${response.status})`,
+        ? "Invalid server response"
+        : `Request failed (${response.status})`,
       response.status,
     );
   }

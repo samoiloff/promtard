@@ -33,12 +33,12 @@ export default function BrowseSearchPage() {
           `/api/prompt-templates/public/search?q=${encodeURIComponent(debounced)}`,
         );
         if (!response.ok) {
-          throw new Error(data.error ?? "Не удалось выполнить поиск");
+          throw new Error(data.error ?? "Search failed");
         }
         if (!cancelled) setItems(data.items ?? []);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Ошибка поиска");
+          setError(err instanceof Error ? err.message : "Search failed");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -52,31 +52,31 @@ export default function BrowseSearchPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
-      <h1 className="text-lg font-semibold tracking-tight">Поиск шаблонов</h1>
+      <h1 className="text-lg font-semibold tracking-tight">Search templates</h1>
       <label className="flex flex-col gap-2">
         <span className="text-sm text-zinc-600 dark:text-zinc-400">
-          По названию или тегу
+          By title or tag
         </span>
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Введите запрос…"
+          placeholder="Enter a query…"
           className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950"
         />
       </label>
       {loading ? (
-        <p className="text-sm text-zinc-500">Поиск…</p>
+        <p className="text-sm text-zinc-500">Searching…</p>
       ) : error ? (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
       ) : debounced ? (
         <PublicTemplateList
           items={items}
-          emptyMessage="Ничего не найдено."
+          emptyMessage="No results found."
           onItemsChange={setItems}
         />
       ) : (
-        <p className="text-sm text-zinc-500">Введите слово для поиска.</p>
+        <p className="text-sm text-zinc-500">Type to search.</p>
       )}
     </div>
   );

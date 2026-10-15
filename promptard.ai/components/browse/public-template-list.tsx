@@ -13,7 +13,7 @@ import type { PublicTemplateListItem } from "@/lib/templates/types";
 
 function formatCreated(iso: string) {
   try {
-    return new Intl.DateTimeFormat("ru-RU", {
+    return new Intl.DateTimeFormat("en-US", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -52,7 +52,7 @@ export function PublicTemplateList({
         error?: string;
       }>(`/api/prompt-templates/${item.id}/like`, { method });
       if (!response.ok) {
-        throw new Error(data.error ?? "Не удалось обновить лайк");
+        throw new Error(data.error ?? "Failed to update like");
       }
       onItemsChange(
         items.map((row) =>
@@ -89,13 +89,13 @@ export function PublicTemplateList({
               className="min-w-0 flex-1 px-4 py-3 transition hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
             >
               <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                {item.title ?? "Без названия"}
+                {item.title ?? "Untitled"}
               </p>
               <p className="mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
                 {item.bodyPreview}
               </p>
               <p className="mt-2 text-xs text-zinc-500">
-                {item.authorName ?? "Автор"} · {formatCreated(item.createdAt)}
+                {item.authorName ?? "Author"} · {formatCreated(item.createdAt)}
               </p>
             </Link>
             <div className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 dark:border-zinc-800">
@@ -107,7 +107,7 @@ export function PublicTemplateList({
                     ? "rounded-full p-2 text-red-500 transition hover:bg-red-50 dark:hover:bg-red-950/30"
                     : "rounded-full p-2 text-zinc-400 transition hover:bg-zinc-100 hover:text-red-500 dark:hover:bg-zinc-900"
                 }
-                aria-label={item.likedByMe ? "Убрать лайк" : "Лайкнуть"}
+                aria-label={item.likedByMe ? "Unlike" : "Like"}
               >
                 <HeartIcon filled={item.likedByMe} />
               </button>
@@ -119,10 +119,10 @@ export function PublicTemplateList({
               type="button"
               onClick={() => void openEditor(item.id, item.canEdit)}
               className="flex shrink-0 flex-col items-center justify-center gap-1 border-l border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
-              aria-label="Редактировать шаблон"
+              aria-label="Edit template"
             >
               <PencilIcon />
-              <span>редактировать</span>
+              <span>edit</span>
             </button>
           </li>
         ))}

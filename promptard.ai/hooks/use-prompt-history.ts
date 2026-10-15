@@ -53,7 +53,7 @@ export function usePromptHistory() {
       })
       .catch(() => {
         if (!active) return;
-        setError("Не удалось загрузить историю");
+        setError("Failed to load history");
       })
       .finally(() => {
         if (active) setIsFetching(false);
@@ -78,7 +78,7 @@ export function usePromptHistory() {
       setItems(await fetchRemoteHistory());
       setError(null);
     } catch {
-      setError("Не удалось загрузить историю");
+      setError("Failed to load history");
     } finally {
       setIsFetching(false);
     }

@@ -8,7 +8,7 @@ import {
 export const templateBodySchema = z
   .string()
   .trim()
-  .min(1, "Промпт не может быть пустым")
+  .min(1, "Prompt cannot be empty")
   .max(TEMPLATE_BODY_MAX_LENGTH);
 
 export const templateTagsSchema = z.array(z.string().min(1).max(64)).max(50);
@@ -28,7 +28,7 @@ export const updateTemplateBodySchema = z.object({
 export function deriveTitle(body: string): string {
   const withoutPlaceholders = body.replace(/\$\{[^}]+\}/g, " ");
   const collapsed = withoutPlaceholders.replace(/\s+/g, " ").trim();
-  if (!collapsed) return "Шаблон";
+  if (!collapsed) return "Template";
   return collapsed.slice(0, TEMPLATE_TITLE_MAX_LENGTH);
 }
 

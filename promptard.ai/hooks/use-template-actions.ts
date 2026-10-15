@@ -43,5 +43,15 @@ export function useTemplateActions() {
     router.push("/templates/new");
   }
 
-  return { openInChat, openEditor, openNewTemplate };
+  function openNewTemplateFromDraft(body: string) {
+    sessionStorage.setItem(TEMPLATE_DRAFT_BODY_KEY, body);
+    router.push("/templates/new");
+  }
+
+  return {
+    openInChat,
+    openEditor,
+    openNewTemplate,
+    openNewTemplateFromDraft,
+  };
 }

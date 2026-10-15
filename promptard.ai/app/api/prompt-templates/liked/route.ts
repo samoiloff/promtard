@@ -15,7 +15,7 @@ export async function GET() {
     return Response.json(
       {
         error:
-          error instanceof Error ? error.message : "Не удалось загрузить лайки",
+          error instanceof Error ? error.message : "Failed to load likes",
       },
       { status: 500 },
     );

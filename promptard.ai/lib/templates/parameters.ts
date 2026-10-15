@@ -23,7 +23,7 @@ export function parametersFromBody(body: string): TemplateParameter[] {
 }
 
 export function defaultParameterName(index: number): string {
-  return `Параметр_${index}`;
+  return `Parameter_${index}`;
 }
 
 export function appendParameterToBody(body: string, name: string): string {

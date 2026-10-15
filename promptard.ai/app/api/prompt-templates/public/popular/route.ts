@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("GET /api/prompt-templates/public/popular", error);
     return Response.json(
-      { error: "Не удалось загрузить шаблоны" },
+      { error: "Failed to load templates" },
       { status: 500 },
     );
   }

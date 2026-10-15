@@ -22,12 +22,12 @@ export default function ProfileLikesPage() {
           error?: string;
         }>("/api/prompt-templates/liked");
         if (!response.ok) {
-          throw new Error(data.error ?? "Не удалось загрузить лайки");
+          throw new Error(data.error ?? "Failed to load likes");
         }
         if (!cancelled) setItems(data.items ?? []);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Ошибка загрузки");
+          setError(err instanceof Error ? err.message : "Load failed");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -41,12 +41,11 @@ export default function ProfileLikesPage() {
 
   return (
     <TemplateListPanel
-      title="Мои лайки"
-      emptyMessage="Вы ещё не лайкнули шаблоны других пользователей."
+      title="My likes"
+      emptyMessage="You have not liked any templates yet."
       items={items}
       loading={loading}
       error={error}
-      showAuthor
     />
   );
 }

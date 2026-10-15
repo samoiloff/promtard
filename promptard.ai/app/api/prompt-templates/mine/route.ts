@@ -15,7 +15,7 @@ export async function GET() {
     return Response.json(
       {
         error:
-          error instanceof Error ? error.message : "Не удалось загрузить шаблоны",
+          error instanceof Error ? error.message : "Failed to load templates",
       },
       { status: 500 },
     );

@@ -37,8 +37,8 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
                 className="flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-2.5 py-2 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
               >
                 <FolderImportIcon className="shrink-0" />
-                <span className="hidden sm:inline">Создать Шаблон</span>
-                <span className="sm:hidden">Шаблон</span>
+                <span className="hidden sm:inline">Create template</span>
+                <span className="sm:hidden">Template</span>
               </button>
               <div
                 className="min-w-0 rounded-2xl rounded-br-md bg-zinc-900 px-4 py-3 text-sm leading-relaxed text-white dark:bg-zinc-100 dark:text-zinc-900"

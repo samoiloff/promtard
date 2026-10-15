@@ -9,7 +9,7 @@ import { TEMPLATE_DRAFT_BODY_KEY } from "@/lib/templates/constants";
 
 function formatWhen(iso: string) {
   try {
-    return new Intl.DateTimeFormat("ru-RU", {
+    return new Intl.DateTimeFormat("en-US", {
       day: "numeric",
       month: "short",
       hour: "2-digit",
@@ -42,15 +42,15 @@ export function HistoryListPanel() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
-      <h1 className="text-lg font-semibold tracking-tight">История промптов</h1>
+      <h1 className="text-lg font-semibold tracking-tight">Prompt history</h1>
 
       {loading ? (
-        <p className="text-sm text-zinc-500">Загрузка…</p>
+        <p className="text-sm text-zinc-500">Loading…</p>
       ) : error ? (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
       ) : items.length === 0 ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Пока пусто. Отправьте первый промпт в чате.
+          Nothing yet. Send your first prompt in chat.
         </p>
       ) : (
         <ul className="flex flex-col gap-2">
@@ -77,7 +77,7 @@ export function HistoryListPanel() {
                 className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 px-2.5 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-900"
               >
                 <FolderImportIcon className="shrink-0" />
-                Создать шаблон
+                Create template
               </button>
             </li>
           ))}

@@ -22,12 +22,12 @@ export default function ProfileTemplatesPage() {
           error?: string;
         }>("/api/prompt-templates/mine");
         if (!response.ok) {
-          throw new Error(data.error ?? "Не удалось загрузить шаблоны");
+          throw new Error(data.error ?? "Failed to load templates");
         }
         if (!cancelled) setItems(data.items ?? []);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Ошибка загрузки");
+          setError(err instanceof Error ? err.message : "Load failed");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -41,8 +41,8 @@ export default function ProfileTemplatesPage() {
 
   return (
     <TemplateListPanel
-      title="Мои шаблоны"
-      emptyMessage="Вы ещё не создали шаблонов."
+      title="My templates"
+      emptyMessage="You have not created any templates yet."
       items={items}
       loading={loading}
       error={error}

@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useMemo, useRef } from "react";
 import { ChatMessageList } from "@/components/chat/chat-message-list";
 import { ModelSelect } from "@/components/chat/model-select";
 import { HighlightedPromptTextarea } from "@/components/home/highlighted-prompt-textarea";
-import { TemplateLaunchRail } from "@/components/home/template-launch-rail";
+import { ComposerPromptRail } from "@/components/home/composer-prompt-rail";
 import { useChat } from "@/contexts/chat-context";
 import { usePromptComposer } from "@/contexts/prompt-composer-context";
 import { useTemplateActions } from "@/hooks/use-template-actions";
@@ -26,7 +26,7 @@ export function ChatPanel() {
     setParameterValue,
     clearActiveTemplate,
   } = usePromptComposer();
-  const { openEditor } = useTemplateActions();
+  const { openEditor, openNewTemplateFromDraft } = useTemplateActions();
   const {
     messages,
     selectedModelId,
@@ -74,6 +74,16 @@ export function ChatPanel() {
     void openEditor(activeTemplateId, canEditActiveTemplate, draft);
   }
 
+  function handleNewTemplate() {
+    const content = resolvedComposerPrompt(
+      draft,
+      templateBody,
+      parameterValues,
+    );
+    if (!content) return;
+    openNewTemplateFromDraft(content);
+  }
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div
@@ -83,11 +93,11 @@ export function ChatPanel() {
         {!hasMessages ? (
           <div className="flex h-full flex-col items-center justify-center px-4 py-10">
             <h1 className="text-center text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
-              Чем могу помочь?
+              How can I help?
             </h1>
             <p className="mt-3 max-w-md text-center text-sm text-zinc-500 dark:text-zinc-400">
-              Задайте вопрос или опишите задачу. Ответ придёт от выбранной модели
-              Groq.
+              Ask a question or describe a task. The reply comes from your
+              selected Groq model.
             </p>
           </div>
         ) : (
@@ -113,14 +123,14 @@ export function ChatPanel() {
               }}
               rows={3}
               disabled={isStreaming}
-              placeholder="Напишите промпт…"
+              placeholder="Write a prompt…"
               segments={promptSegments}
               highlightParameters={highlightParameters}
             />
 
             {parameterNames.length > 0 ? (
               <div className="mt-2 space-y-2 border-t border-zinc-100 px-1 pt-3 dark:border-zinc-800">
-                <p className="text-xs font-medium text-zinc-500">Параметры</p>
+                <p className="text-xs font-medium text-zinc-500">Parameters</p>
                 {parameterNames.map((name) => (
                   <label key={name} className="flex flex-col gap-1">
                     <span className="text-xs text-zinc-600 dark:text-zinc-400">
@@ -133,7 +143,7 @@ export function ChatPanel() {
                         setParameterValue(name, event.target.value)
                       }
                       className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
-                      placeholder={`Значение для ${name}`}
+                      placeholder={`Value for ${name}`}
                     />
                   </label>
                 ))}
@@ -163,14 +173,14 @@ export function ChatPanel() {
             </div>
           </form>
 
-          {activeTemplateId ? (
-            <TemplateLaunchRail
-              draft={draft}
-              templateBody={templateBody}
-              parameterValues={parameterValues}
-              onEdit={handleEditTemplate}
-            />
-          ) : null}
+          <ComposerPromptRail
+            variant={activeTemplateId ? "template" : "home"}
+            draft={draft}
+            templateBody={templateBody}
+            parameterValues={parameterValues}
+            onEdit={handleEditTemplate}
+            onNewTemplate={handleNewTemplate}
+          />
         </div>
       </div>
     </div>

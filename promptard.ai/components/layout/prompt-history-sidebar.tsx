@@ -9,7 +9,7 @@ import { PROMPT_HISTORY_SIDEBAR_LIMIT } from "@/lib/history/constants";
 
 function formatWhen(iso: string) {
   try {
-    return new Intl.DateTimeFormat("ru-RU", {
+    return new Intl.DateTimeFormat("en-US", {
       day: "numeric",
       month: "short",
       hour: "2-digit",
@@ -38,30 +38,30 @@ export function PromptHistorySidebar() {
     >
       <div className="border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          История
+          History
         </h2>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          Недавние промпты ({PROMPT_HISTORY_SIDEBAR_LIMIT})
+          Recent prompts ({PROMPT_HISTORY_SIDEBAR_LIMIT})
         </p>
         {isAuthenticated ? (
           <Link
             href="/profile/history"
             className="mt-2 inline-block text-xs font-medium text-zinc-600 underline-offset-2 hover:underline dark:text-zinc-400"
           >
-            Вся история
+            Full history
           </Link>
         ) : null}
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain p-2">
         {loading ? (
-          <p className="px-2 py-3 text-sm text-zinc-500">Загрузка…</p>
+          <p className="px-2 py-3 text-sm text-zinc-500">Loading…</p>
         ) : error ? (
           <p className="px-2 py-3 text-sm text-red-600 dark:text-red-400">
             {error}
           </p>
         ) : recentItems.length === 0 ? (
           <p className="px-2 py-3 text-sm text-zinc-500 dark:text-zinc-400">
-            Пока пусто. Отправьте первый промпт.
+            Nothing yet. Send your first prompt.
           </p>
         ) : (
           <ul className="flex flex-col gap-1">

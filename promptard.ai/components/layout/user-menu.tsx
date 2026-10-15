@@ -11,9 +11,9 @@ type UserMenuProps = {
 };
 
 const menuItems = [
-  { href: "/profile/templates", label: "Мои шаблоны" },
-  { href: "/profile/likes", label: "Мои лайки" },
-  { href: "/profile/history", label: "История" },
+  { href: "/profile/templates", label: "My templates" },
+  { href: "/profile/likes", label: "My likes" },
+  { href: "/profile/history", label: "History" },
 ] as const;
 
 export function UserMenu({ user }: UserMenuProps) {
@@ -42,7 +42,7 @@ export function UserMenu({ user }: UserMenuProps) {
     };
   }, [open]);
 
-  const displayName = user.name ?? user.email ?? "Профиль";
+  const displayName = user.name ?? user.email ?? "Profile";
 
   return (
     <div ref={rootRef} className="relative">
@@ -115,7 +115,7 @@ export function UserMenu({ user }: UserMenuProps) {
               void signOut();
             }}
           >
-            Выйти
+            Sign out
           </button>
         </div>
       ) : null}

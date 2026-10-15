@@ -122,7 +122,7 @@ export function TemplateEditor({
 
     if (action === "delete") {
       if (!templateId) return;
-      if (!window.confirm("Удалить этот шаблон?")) return;
+      if (!window.confirm("Delete this template?")) return;
       setSaving(true);
       setError(null);
       try {
@@ -131,12 +131,12 @@ export function TemplateEditor({
         });
         if (!response.ok) {
           const data = await readJsonResponse<{ error?: string }>(response);
-          throw new Error(data.error ?? "Не удалось удалить");
+          throw new Error(data.error ?? "Failed to delete");
         }
-        showToast("Шаблон удалён");
+        showToast("Template deleted");
         router.push("/");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Ошибка удаления");
+        setError(err instanceof Error ? err.message : "Delete failed");
       } finally {
         setSaving(false);
       }
@@ -145,7 +145,7 @@ export function TemplateEditor({
 
     const parsedBody = templateBodySchema.safeParse(body);
     if (!parsedBody.success) {
-      setError(parsedBody.error.issues[0]?.message ?? "Некорректный промпт");
+      setError(parsedBody.error.issues[0]?.message ?? "Invalid prompt");
       return;
     }
 
@@ -168,9 +168,9 @@ export function TemplateEditor({
           }),
         });
         if (!response.ok) {
-          throw new Error(data.error ?? "Не удалось сохранить");
+          throw new Error(data.error ?? "Failed to save");
         }
-        showToast("Шаблон добавлен");
+        showToast("Template created");
         if (data.item?.id) {
           router.replace(`/templates/${data.item.id}/edit`);
         }
@@ -191,11 +191,11 @@ export function TemplateEditor({
         },
       );
       if (!response.ok) {
-        throw new Error(data.error ?? "Не удалось сохранить");
+        throw new Error(data.error ?? "Failed to save");
       }
-      showToast("Сохранено");
+      showToast("Saved");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка сохранения");
+      setError(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -208,19 +208,19 @@ export function TemplateEditor({
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-6">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-lg font-semibold tracking-tight">
-            {mode === "create" ? "Новый шаблон промпта" : "Редактирование шаблона"}
+            {mode === "create" ? "New prompt template" : "Edit template"}
           </h1>
           <Link
             href="/"
             className="text-sm font-medium text-zinc-500 transition hover:text-zinc-800 dark:hover:text-zinc-200"
           >
-            Назад
+            Back
           </Link>
         </div>
 
         <label className="flex flex-col gap-2">
           <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Промпт
+            Prompt
           </span>
           <textarea
             ref={promptRef}
@@ -228,20 +228,20 @@ export function TemplateEditor({
             onChange={(e) => setBody(e.target.value)}
             rows={10}
             className="w-full resize-y rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm leading-relaxed text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-            placeholder="Текст шаблона с параметрами ${имя}"
+            placeholder="Template text with ${name} placeholders"
           />
         </label>
 
         <label className="flex flex-col gap-2">
           <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Теги
+            Tags
           </span>
           <input
             type="text"
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
             className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-            placeholder="через запятую, например: авто, страна"
+            placeholder="comma-separated, e.g. cars, country"
           />
         </label>
 
@@ -253,31 +253,32 @@ export function TemplateEditor({
             className="h-4 w-4 rounded border-zinc-300"
           />
           <span className="text-sm text-zinc-700 dark:text-zinc-300">
-            Публичный
+            Public
           </span>
           <span className="text-xs text-zinc-500">
-            (виден в «Последние», «Популярные» и в поиске)
+            (visible in Recent, Popular, and search)
           </span>
         </label>
 
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Параметры промпта
+              Prompt parameters
             </h2>
             <button
               type="button"
               onClick={handleAddParameter}
               className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium transition hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-900"
             >
-              добавить параметр
+              Add parameter
             </button>
           </div>
 
           {parameters.length === 0 ? (
             <p className="text-sm text-zinc-500">
-              Добавьте параметр — в конец промпта подставится{" "}
-              <code className="text-xs">${"{имя}"}</code>
+              Add a parameter — a{" "}
+              <code className="text-xs">${"{name}"}</code> placeholder will be
+              appended to the prompt
             </p>
           ) : (
             <ul className="flex flex-col gap-2">
@@ -293,14 +294,14 @@ export function TemplateEditor({
                       handleParameterNameChange(param.id, e.target.value)
                     }
                     className="min-w-0 flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-950"
-                    aria-label={`Имя параметра ${param.name}`}
+                    aria-label={`Parameter name ${param.name}`}
                   />
                   <button
                     type="button"
                     onClick={() => handleInsertParameter(param.name)}
                     className="shrink-0 rounded-lg border border-zinc-300 px-3 py-2 text-xs font-medium transition hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-900"
                   >
-                    Вставить в промпт
+                    Insert into prompt
                   </button>
                 </li>
               ))}
@@ -328,7 +329,7 @@ export function TemplateEditor({
             ) : (
               <>
                 <SaveIcon className="shrink-0" />
-                Сохранить
+                Save
               </>
             )}
           </button>
@@ -339,7 +340,7 @@ export function TemplateEditor({
               onClick={() => persist("delete")}
               className="rounded-full border border-red-300 px-6 py-2.5 text-sm font-medium text-red-700 transition hover:bg-red-50 disabled:opacity-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/40"
             >
-              Удалить
+              Delete
             </button>
           ) : null}
         </div>

@@ -32,12 +32,12 @@ export function BrowseTemplateFeed({
           error?: string;
         }>(endpoint);
         if (!response.ok) {
-          throw new Error(data.error ?? "Не удалось загрузить");
+          throw new Error(data.error ?? "Failed to load");
         }
         if (!cancelled) setItems(data.items ?? []);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Ошибка загрузки");
+          setError(err instanceof Error ? err.message : "Load failed");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -53,7 +53,7 @@ export function BrowseTemplateFeed({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
       <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
       {loading ? (
-        <p className="text-sm text-zinc-500">Загрузка…</p>
+        <p className="text-sm text-zinc-500">Loading…</p>
       ) : error ? (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
       ) : (
