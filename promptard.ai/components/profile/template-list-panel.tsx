@@ -1,0 +1,84 @@
+"use client";
+
+import Link from "next/link";
+
+import type { PromptTemplateListItem } from "@/lib/templates/types";
+
+function formatWhen(iso: string) {
+  try {
+    return new Intl.DateTimeFormat("ru-RU", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  } catch {
+    return "";
+  }
+}
+
+type TemplateListPanelProps = {
+  title: string;
+  emptyMessage: string;
+  items: PromptTemplateListItem[];
+  loading: boolean;
+  error: string | null;
+  getHref: (item: PromptTemplateListItem) => string;
+  showAuthor?: boolean;
+};
+
+export function TemplateListPanel({
+  title,
+  emptyMessage,
+  items,
+  loading,
+  error,
+  getHref,
+  showAuthor = false,
+}: TemplateListPanelProps) {
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
+      <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
+
+      {loading ? (
+        <p className="text-sm text-zinc-500">Загрузка…</p>
+      ) : error ? (
+        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+      ) : items.length === 0 ? (
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{emptyMessage}</p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {items.map((item) => (
+            <li key={item.id}>
+              <Link
+                href={getHref(item)}
+                className="block rounded-xl border border-zinc-200 px-4 py-3 transition hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900/50"
+              >
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {item.title ?? item.bodyPreview}
+                </p>
+                {item.title ? (
+                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                    {item.bodyPreview}
+                  </p>
+                ) : null}
+                {showAuthor && item.authorName ? (
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Автор: {item.authorName}
+                  </p>
+                ) : null}
+                {item.tags.length > 0 ? (
+                  <p className="mt-2 text-xs text-zinc-500">
+                    {item.tags.join(" · ")}
+                  </p>
+                ) : null}
+                <p className="mt-2 text-xs text-zinc-400">
+                  {formatWhen(item.updatedAt)}
+                </p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

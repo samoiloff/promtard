@@ -1,7 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
 import { usePromptComposer } from "@/contexts/prompt-composer-context";
 import { usePromptHistoryContext } from "@/contexts/prompt-history-context";
+import { PROMPT_HISTORY_SIDEBAR_LIMIT } from "@/lib/history/constants";
 
 function formatWhen(iso: string) {
   try {
@@ -22,8 +26,11 @@ function truncate(text: string, max = 72) {
 }
 
 export function PromptHistorySidebar() {
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
   const { items, loading, error } = usePromptHistoryContext();
   const { applyFromHistory } = usePromptComposer();
+  const recentItems = items.slice(0, PROMPT_HISTORY_SIDEBAR_LIMIT);
 
   return (
     <aside
@@ -34,8 +41,16 @@ export function PromptHistorySidebar() {
           История
         </h2>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          Недавние промпты
+          Недавние промпты ({PROMPT_HISTORY_SIDEBAR_LIMIT})
         </p>
+        {isAuthenticated ? (
+          <Link
+            href="/profile/history"
+            className="mt-2 inline-block text-xs font-medium text-zinc-600 underline-offset-2 hover:underline dark:text-zinc-400"
+          >
+            Вся история
+          </Link>
+        ) : null}
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain p-2">
         {loading ? (
@@ -44,13 +59,13 @@ export function PromptHistorySidebar() {
           <p className="px-2 py-3 text-sm text-red-600 dark:text-red-400">
             {error}
           </p>
-        ) : items.length === 0 ? (
+        ) : recentItems.length === 0 ? (
           <p className="px-2 py-3 text-sm text-zinc-500 dark:text-zinc-400">
             Пока пусто. Отправьте первый промпт.
           </p>
         ) : (
           <ul className="flex flex-col gap-1">
-            {items.map((item) => (
+            {recentItems.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
