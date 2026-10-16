@@ -46,6 +46,11 @@ export function renameParameterInBody(
   return body.replace(pattern, `\${${newName}}`);
 }
 
+export function removeParameterFromBody(body: string, name: string): string {
+  const pattern = new RegExp(`\\$\\{${escapeRegExp(name)}\\}`, "g");
+  return body.replace(pattern, "");
+}
+
 export function parameterNamesFromBody(body: string): string[] {
   return parametersFromBody(body).map((param) => param.name);
 }

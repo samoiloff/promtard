@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { LoginModal } from "@/components/auth/login-modal";
 import { showToast } from "@/components/chat/toast";
 import { SaveIcon } from "@/components/icons/save-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
 import { fetchJson, readJsonResponse } from "@/lib/api/read-json-response";
 import { TEMPLATE_DRAFT_BODY_KEY } from "@/lib/templates/constants";
 import {
@@ -16,6 +17,7 @@ import {
   defaultParameterName,
   insertPlaceholderAtCursor,
   parametersFromBody,
+  removeParameterFromBody,
   renameParameterInBody,
 } from "@/lib/templates/parameters";
 import type { TemplateParameter } from "@/lib/templates/types";
@@ -96,6 +98,13 @@ export function TemplateEditor({
     if (oldName !== nextName) {
       setBody((prev) => renameParameterInBody(prev, oldName, nextName));
     }
+  }
+
+  function handleRemoveParameter(id: string) {
+    const param = parameters.find((p) => p.id === id);
+    if (!param) return;
+    setParameters((prev) => prev.filter((p) => p.id !== id));
+    setBody((prev) => removeParameterFromBody(prev, param.name));
   }
 
   function handleInsertParameter(name: string) {
@@ -302,6 +311,14 @@ export function TemplateEditor({
                     className="shrink-0 rounded-lg border border-zinc-300 px-3 py-2 text-xs font-medium transition hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-900"
                   >
                     Insert into prompt
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveParameter(param.id)}
+                    aria-label={`Remove parameter ${param.name}`}
+                    className="shrink-0 rounded-lg border border-zinc-300 p-2 text-zinc-500 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-zinc-600 dark:hover:border-red-800 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+                  >
+                    <TrashIcon />
                   </button>
                 </li>
               ))}
