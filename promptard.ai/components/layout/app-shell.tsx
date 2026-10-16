@@ -13,6 +13,15 @@ import { usePromptHistoryContext } from "@/contexts/prompt-history-context";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) {
+    return (
+      <div className="flex h-dvh flex-col overflow-hidden">
+        <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+      </div>
+    );
+  }
+
   const hideHistorySidebar =
     pathname.startsWith("/profile") || pathname.startsWith("/browse");
   const { refresh } = usePromptHistoryContext();

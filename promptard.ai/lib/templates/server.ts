@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import {
@@ -165,6 +165,75 @@ export async function createPromptTemplateForUser(
   }
 
   return toItem(row, tagNames);
+}
+
+export type BulkTemplateInput = {
+  body: string;
+  tags: string[];
+  isPublic: boolean;
+};
+
+export async function createPromptTemplatesBulk(
+  authorId: string,
+  rows: BulkTemplateInput[],
+): Promise<number> {
+  if (rows.length === 0) return 0;
+
+  return db.transaction(async (tx) => {
+    const now = new Date();
+
+    const insertedTemplates = await tx
+      .insert(promptTemplates)
+      .values(
+        rows.map((row) => ({
+          authorId,
+          title: deriveTitle(row.body),
+          body: row.body,
+          isPrivate: !row.isPublic,
+          updatedAt: now,
+        })),
+      )
+      .returning({ id: promptTemplates.id });
+
+    const uniqueTagNames = [...new Set(rows.flatMap((row) => row.tags))];
+    const nameToId = new Map<string, string>();
+
+    if (uniqueTagNames.length > 0) {
+      await tx
+        .insert(tags)
+        .values(uniqueTagNames.map((name) => ({ name })))
+        .onConflictDoNothing({ target: tags.name });
+
+      const tagRows = await tx
+        .select({ id: tags.id, name: tags.name })
+        .from(tags)
+        .where(inArray(tags.name, uniqueTagNames));
+
+      for (const tag of tagRows) {
+        nameToId.set(tag.name, tag.id);
+      }
+    }
+
+    const templateTagLinks: { templateId: string; tagId: string }[] = [];
+
+    for (let i = 0; i < rows.length; i++) {
+      const templateId = insertedTemplates[i]?.id;
+      if (!templateId) continue;
+
+      for (const tagName of rows[i].tags) {
+        const tagId = nameToId.get(tagName);
+        if (tagId) {
+          templateTagLinks.push({ templateId, tagId });
+        }
+      }
+    }
+
+    if (templateTagLinks.length > 0) {
+      await tx.insert(promptTemplateTags).values(templateTagLinks);
+    }
+
+    return insertedTemplates.length;
+  });
 }
 
 export async function updatePromptTemplateForUser(

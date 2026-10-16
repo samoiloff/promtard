@@ -19,6 +19,11 @@ pnpm dev
 
 Подробно: [docs/oauth-environments.md](docs/oauth-environments.md).
 
+## Admin
+
+- URL: `/admin` (password from `ADMIN_PASSWORD`).
+- Table CRUD tabs + CSV import: [docs/admin.md](docs/admin.md).
+
 ## Deploy on Vercel
 
 1. Импортируйте репозиторий на [Vercel](https://vercel.com/new).
