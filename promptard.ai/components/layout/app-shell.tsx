@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { AuthHeader } from "@/components/layout/auth-header";
-import { FloppyAiIcon } from "@/components/icons/floppy-ai-icon";
 import { MainNav } from "@/components/layout/main-nav";
 import { PromptHistorySidebar } from "@/components/layout/prompt-history-sidebar";
 import { MergeGuestHistory } from "@/components/auth/merge-guest-history";
@@ -28,8 +28,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => resetHomeComposer()}
             className="flex items-center gap-2 rounded-md text-lg font-semibold tracking-tight text-zinc-900 transition hover:opacity-80 dark:text-zinc-100"
           >
-            <FloppyAiIcon className="h-6 w-6 shrink-0" />
-            <span>Promptard.io</span>
+            <Image
+              src="/logo.png"
+              alt=""
+              width={81}
+              height={50}
+              className="h-7 w-auto shrink-0 dark:invert"
+              priority
+            />
+            <span>promtard.com</span>
           </Link>
           <MainNav />
         </div>
