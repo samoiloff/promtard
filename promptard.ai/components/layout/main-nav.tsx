@@ -7,6 +7,7 @@ const items = [
   { href: "/browse/recent", label: "Recent" },
   { href: "/browse/popular", label: "Popular" },
   { href: "/browse/search", label: "Search" },
+  { href: "/about", label: "About" },
 ] as const;
 
 export function MainNav() {

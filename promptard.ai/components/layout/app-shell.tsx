@@ -23,7 +23,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const hideHistorySidebar =
-    pathname.startsWith("/profile") || pathname.startsWith("/browse");
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/browse") ||
+    pathname.startsWith("/about");
   const { refresh } = usePromptHistoryContext();
   const { resetHomeComposer } = usePromptComposer();
 
