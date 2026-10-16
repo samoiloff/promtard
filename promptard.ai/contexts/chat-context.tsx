@@ -4,12 +4,14 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
 
 import { usePromptHistoryContext } from "@/contexts/prompt-history-context";
 import {
+  DEFAULT_GROQ_MODEL_ID,
   GROQ_MODEL_STORAGE_KEY,
   getGroqModelById,
   readStoredGroqModelId,
@@ -36,11 +38,15 @@ const ChatContext = createContext<ChatContextValue | null>(null);
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const { addPrompt } = usePromptHistoryContext();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [selectedModelId, setSelectedModelIdState] = useState(() =>
-    readStoredGroqModelId(),
+  const [selectedModelId, setSelectedModelIdState] = useState(
+    DEFAULT_GROQ_MODEL_ID,
   );
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedModelIdState(readStoredGroqModelId());
+  }, []);
 
   const setSelectedModelId = useCallback((id: string) => {
     if (!getGroqModelById(id)) return;
