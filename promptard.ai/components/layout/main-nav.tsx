@@ -25,8 +25,8 @@ export function MainNav() {
             href={item.href}
             className={
               active
-                ? "rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "rounded-full px-3 py-1.5 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
+                ? "rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-bold text-white dark:bg-zinc-100 dark:text-zinc-900"
+                : "rounded-full px-3 py-1.5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
             }
           >
             {item.label}
