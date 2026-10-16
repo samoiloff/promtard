@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { FolderImportIcon } from "@/components/icons/folder-import-icon";
+import { TemplateCardTags } from "@/components/templates/template-card-tags";
 import { TEMPLATE_DRAFT_BODY_KEY } from "@/lib/templates/constants";
 import type { PromptTemplateViewItem } from "@/lib/templates/types";
 
@@ -34,9 +35,7 @@ export function TemplateView({ item }: TemplateViewProps) {
           </Link>
         </div>
 
-        {item.tags.length > 0 ? (
-          <p className="text-sm text-zinc-500">{item.tags.join(" · ")}</p>
-        ) : null}
+        <TemplateCardTags tags={item.tags} className="mt-0" />
 
         <div
           className="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
